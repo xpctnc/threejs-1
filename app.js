@@ -11,6 +11,7 @@ document.body.appendChild(renderer.domElement);
 
 const colorLight = new THREE.Color('hsl(100, 100%, 100%)');
 const colorPink = new THREE.Color('hsl(306, 100%, 60%)');
+const colorCyan = new THREE.Color('hsl(180, 100%, 50%)');
 const colorYellow = new THREE.Color('hsl(50, 100%, 60%)');
 
 const cubeMaterial = new THREE.MeshPhongMaterial({
@@ -32,10 +33,10 @@ const handleResize = () => {
 
 
 const createSphere = (s = 1, color = '0xFFFFFF') => {
-    const sphereGeometry = new THREE.SphereGeometry(s, 20, 20);
+    const sphereGeometry = new THREE.SphereGeometry(s, 50, 50);
     const sphereMaterial = new THREE.MeshPhongMaterial({
         color,
-        shininess: 30,
+        shininess: 0,
     })
 
     return new THREE.Mesh(sphereGeometry, sphereMaterial);
@@ -44,27 +45,46 @@ const createSphere = (s = 1, color = '0xFFFFFF') => {
 const createPointLight = (i = 1, color = 0xffffff) => new THREE.PointLight(color, i)
 
 const nucleus = createSphere(3);
-const l1= createPointLight(.5);
-const l2 = createPointLight(.2);
+scene.add(nucleus);
+const createElectron = (s = .4, color = 0xffffff) => {
+    const sphere = createSphere(s, color);
+    const pivot = new THREE.Object3D();
 
-l1.position.set(120, 20 ,60)
-l2.position.set(-60, 0, 20)
+    pivot.add(sphere);
+    return {
+        sphere, pivot
+    }
+}
 
-scene.add(nucleus, l1, l2);
 
-const e1 = createSphere(.4)
-const e2 = createSphere(.4)
-const e3 = createSphere(.4)
-const e4 = createSphere(.4)
+const e1 = createElectron(.4)
+const e2 = createElectron(.4)
+const e3 = createElectron(.4)
+const e4 = createElectron(.4)
 
-e1.position.set(10, 0, 0);
-e2.position.set(5, 0, 0);
-e3.position.set(-5, 0, 0);
-e4.position.set(-10, 0, 0);
+e1.sphere.position.set(10, 5, 0);
+e2.sphere.position.set(5, 5, 5);
+e3.sphere.position.set(-5, -5, 0);
+e4.sphere.position.set(-10, -10, 0);
 
-scene.add(e1, e2, e3, e4);
+e1.sphere.add(createPointLight(1, colorYellow));
+e2.sphere.add(createPointLight(1, colorCyan));
+e3.sphere.add(createPointLight(1, colorPink));
+e4.sphere.add(createPointLight(1, colorLight));
+
+e1.pivot.rotation.x += 90;
+e2.pivot.rotation.y += 90
+e3.pivot.rotation.y += 90
+e4.pivot.rotation.y += 50
+
+nucleus.add(e1.pivot, e2.pivot, e3.pivot, e4.pivot);
+
 
 const loop = () => {
+    e1.pivot.rotation.z += .01;
+    e2.pivot.rotation.z += .01;
+    e3.pivot.rotation.z += .01;
+    e4.pivot.rotation.z += .01;
     renderer.render(scene, camera);
     requestAnimationFrame(loop)
 }
