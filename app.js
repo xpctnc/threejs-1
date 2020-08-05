@@ -20,7 +20,7 @@ const cubeMaterial = new THREE.MeshPhongMaterial({
 const light = new THREE.PointLight(colorPink, 2);
 const light2 = new THREE.PointLight(colorYellow, 2);
 
-camera.position.z = 15;
+camera.position.z = 30;
 
 const handleResize = () => {
     const { innerWidth, innerHeight } = window;
@@ -35,22 +35,34 @@ const createSphere = (s = 1, color = '0xFFFFFF') => {
     const sphereGeometry = new THREE.SphereGeometry(s, 20, 20);
     const sphereMaterial = new THREE.MeshPhongMaterial({
         color,
-        shininess: 50,
+        shininess: 30,
     })
 
     return new THREE.Mesh(sphereGeometry, sphereMaterial);
 }
 
-const createPointLight = (i = 1, color = 0xFFFFFF) => new THREE.PointLight(color, i)
+const createPointLight = (i = 1, color = 0xffffff) => new THREE.PointLight(color, i)
 
 const nucleus = createSphere(3);
-const l1 = createPointLight();
-const l2 = createPointLight();
+const l1= createPointLight(.5);
+const l2 = createPointLight(.2);
 
-l1.position.set(30, 5 ,10)
-l2.position.set(60, 0, 20)
+l1.position.set(120, 20 ,60)
+l2.position.set(-60, 0, 20)
 
 scene.add(nucleus, l1, l2);
+
+const e1 = createSphere(.4)
+const e2 = createSphere(.4)
+const e3 = createSphere(.4)
+const e4 = createSphere(.4)
+
+e1.position.set(10, 0, 0);
+e2.position.set(5, 0, 0);
+e3.position.set(-5, 0, 0);
+e4.position.set(-10, 0, 0);
+
+scene.add(e1, e2, e3, e4);
 
 const loop = () => {
     renderer.render(scene, camera);
