@@ -7,18 +7,26 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 document.body.appendChild(renderer.domElement);
 
+const colorPink = new THREE.Color('hsl(306, 100%, 60%)');
+const colorYellow = new THREE.Color('hsl(40, 100%, 60%)');
 
-const cubeGeometry = new THREE.BoxGeometry({
-    width: 10,
-    height: 10,
-    depth: 10,
-});
+const cubeGeometry = new THREE.BoxGeometry();
 
 const cubeMaterial = new THREE.MeshPhongMaterial({
-    color: 0x0525F04,
+    color: colorYellow,
     shininess: 80,
-});
+})
 
 const cube = new THREE.Mesh(cubeGeometry, cubeMaterial);
+
+const light = new THREE.PointLight(colorPink, 2);
+light.position.z = 20;
+light.position.y = -20;
+light.position.x = -40;
+
+scene.add(light);
+scene.add(cube);
+
+camera.position.z = 35;
 
 renderer.render(scene, camera);
